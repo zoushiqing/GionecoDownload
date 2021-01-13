@@ -110,12 +110,6 @@ class DownloadTask(
                     stopDownload(errorMsg)
                     Log.e(TAG, errorMsg)
                 }
-                //如果是重试，将次数暴露给UI
-                if (flag) {
-                    mHandler.post {
-                        mListener.onFail("线程id:${threadId}   重试次数：${mRetryCount + 1}")
-                    }
-                }
             } finally {
                 try {
                     inputStream?.close()
