@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/start_download"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="开始下载"/>
+
+    <Button
+        android:id="@+id/stop_download"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="停止下载"/>
+    <Button
+        android:id="@+id/re_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_alignParentRight="true"
+        android:text="重新下载"/>
+    <Button
+        android:id="@+id/clear_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_alignParentRight="true"
+        android:text="清除下载"/>
+</LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/pbSmall"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/tv_progress"
+        android:layout_below="@+id/pbSmall"
+        android:text="0%"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/tv_status"
+        android:layout_below="@+id/tv_progress"
+        tools:text="下载失败"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:scrollbars="vertical"
+        android:layout_height="600dp"/>
+</RelativeLayout>
