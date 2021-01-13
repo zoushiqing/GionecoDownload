@@ -3,13 +3,13 @@ package com.gioneco.download.download
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
-import android.util.Log
 import com.gioneco.download.bean.DownloadInfo
 import com.gioneco.download.constant.Constant
 import com.gioneco.download.constant.Constant.Companion.TAG
 import com.gioneco.download.db.DBManager
 import com.gioneco.download.listener.DownloadListener
+import com.gioneco.download.utils.logE
+import com.gioneco.download.utils.logI
 import java.io.RandomAccessFile
 import java.io.BufferedInputStream
 import java.io.IOException
@@ -49,7 +49,7 @@ class DownloadTask(
             if (DBManager.getInstance(mContext).isHasInfos(mDownLoadUrl)) {     //判断是否存在未完成的该任务
                 info = DBManager.getInstance(mContext).getInfo(mDownLoadUrl, threadId)
             }
-            Log.d(TAG, "数据库中是否有数据 线程Id $threadId: $info")
+            "数据库中是否有数据 线程Id $threadId: $info".logI()
             try {
                 val url = URL(mDownLoadUrl)
                 var compeltesize = info?.completeSize ?: 0
@@ -61,30 +61,27 @@ class DownloadTask(
                 connection.connectTimeout = 10000
                 connection.readTimeout = 10000
                 connection.setRequestProperty("Connection", "Keep-Alive")
-                Log.d(TAG, "线程id:$threadId Range:  bytes=${startPos + compeltesize}-$endPos")
+                "线程id:$threadId Range:  bytes=${startPos + compeltesize}-$endPos".logI()
                 connection.setRequestProperty("Range", "bytes=${startPos + compeltesize}-$endPos")
                 inputStream = BufferedInputStream(connection.inputStream)
                 mRandomAccessFile = RandomAccessFile(mFilename, "rw")
                 //上次的最后的写入位置
                 mRandomAccessFile?.seek((startPos + compeltesize).toLong())
-                Log.d(TAG, " 线程id: $threadId 开始位置: $startPos ")
+                " 线程id: $threadId 开始位置: $startPos ".logI()
                 val buffer = ByteArray(8 * 1024)
                 var length = 0
                 while ({ length = inputStream.read(buffer);length }() > 0) {
                     if (FileDownloader.instance.getDownloadState(mDownLoadUrl) == Constant.DOWNLOAD_STATE_PAUSE) { //下载任务被暂停
                         return
                     }
-                    Log.d(TAG, "线程id:$threadId ------写入: $length")
+                    "线程id:$threadId ------写入: $length".logI()
                     mRandomAccessFile?.write(buffer, 0, length)
                     compeltesize += length
                     DBManager.getInstance(mContext)
                         .updataInfos(threadId, compeltesize, mDownLoadUrl)  //保存数据库中的下载进度
                     sendMessage(Constant.DOWNLOAD_KEEP, calculateCompleteSize(), null)     //更新进度条
                 }
-                Log.d(
-                    TAG,
-                    "线程id: " + threadId + "已完成: " + calculateCompleteSize() + " 总大小: " + size
-                )
+                "线程id: " + threadId + "已完成: " + calculateCompleteSize() + " 总大小: " + size.logI()
                 if (calculateCompleteSize() >= size) {      //判断下载是否完成
                     sendMessage(Constant.DOWNLOAD_COMPLETE, -1, mDownLoadUrl)
                     //改变状态，可以继续下载
@@ -102,13 +99,19 @@ class DownloadTask(
                 if (!flag) {
                     val errorMsg =
                         "下载失败,线程id:$threadId 其他异常终止下载：" + e.message + " 重试次数:$mRetryCount"
-                    Log.e(TAG, errorMsg)
+                    errorMsg.logE()
                     stopDownload(errorMsg)
                 } else if (mRetryCount == 9) { //当下载了10都次失败 就终止下载
                     val errorMsg =
                         "下载失败,线程id:$threadId 重试次数过多终止下载：" + e.message + " 重试次数:$mRetryCount"
                     stopDownload(errorMsg)
-                    Log.e(TAG, errorMsg)
+                    errorMsg.logE()
+                }
+                //如果是重试，将次数暴露给UI
+                if (Constant.DEBUG&&flag) {
+                    mHandler.post {
+                        mListener.onFail("线程id:${threadId}   重试次数：${mRetryCount + 1}")
+                    }
                 }
             } finally {
                 try {

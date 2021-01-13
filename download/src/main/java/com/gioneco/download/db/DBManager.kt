@@ -1,8 +1,8 @@
 package com.gioneco.download.db
 
 import android.content.Context
-import android.util.Log
 import com.gioneco.download.bean.DownloadInfo
+import com.gioneco.download.utils.logI
 
 
 /**
@@ -124,14 +124,12 @@ class DBManager private constructor(context: Context) {
             cursor.getInt(cursor.getColumnIndex("complete_size")),
             cursor.getString(cursor.getColumnIndex("url"))
         )
-        Log.d(
-            "DB", "get db info print: " + cursor.getInt(cursor.getColumnIndex("thread_id")) + " " +
-                    cursor.getInt(cursor.getColumnIndex("start_pos")) + " " + cursor.getInt(
-                cursor.getColumnIndex(
-                    "end_pos"
-                )
-            ) + " " + cursor.getInt(cursor.getColumnIndex("complete_size")) + " "
-        )
+        "get db info print: " + cursor.getInt(cursor.getColumnIndex("thread_id")) + " " +
+                cursor.getInt(cursor.getColumnIndex("start_pos")) + " " + cursor.getInt(
+            cursor.getColumnIndex(
+                "end_pos"
+            )
+        ) + " " + cursor.getInt(cursor.getColumnIndex("complete_size")) + " ".logI("DB")
         cursor.close()
         return info
     }

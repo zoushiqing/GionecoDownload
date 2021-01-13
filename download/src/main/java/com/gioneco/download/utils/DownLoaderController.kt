@@ -1,6 +1,7 @@
 package com.gioneco.download.utils
 
 import android.content.Context
+import com.gioneco.download.constant.Constant
 import com.gioneco.download.listener.DownloadListener
 import com.gioneco.download.state.DownloadState
 import com.gioneco.download.state.impl.StartDownloadState
@@ -15,6 +16,11 @@ class DownLoaderController {
     private var mState: DownloadState? = null
     private val startDownloadState = StartDownloadState()
     private val stopDownloadState = StopDownloadState()
+
+
+    fun setDebugMode(debug: Boolean) {
+        Constant.DEBUG = debug
+    }
 
     fun startDownload(
         context: Context,

@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         val mTvProgress = findViewById<TextView>(R.id.tv_progress)
 
         val controller = DownLoaderController()
-
+        controller.setDebugMode(true)
         //开始(继续)下载
         btnStartdownload.setOnClickListener {
             tv_status.text = ""
@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                                 System.currentTimeMillis(),
                                 lastTime
                             )
+
                     }
 
                     /**
@@ -116,6 +117,7 @@ class MainActivity : AppCompatActivity() {
             mMax = 0
             mTvProgress.text = "0%"
             btnStartdownload.performClick()
+            lastTime = 0L
         }
         //清除记录
         cleardownload.setOnClickListener {
@@ -126,6 +128,7 @@ class MainActivity : AppCompatActivity() {
             File(filename).apply {
                 if (exists()) delete()
             }
+            lastTime = 0L
         }
     }
 

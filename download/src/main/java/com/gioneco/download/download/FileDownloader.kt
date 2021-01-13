@@ -4,14 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
-import android.util.Log
 import com.gioneco.download.bean.DownloadInfo
 import com.gioneco.download.constant.Constant
 import com.gioneco.download.constant.Constant.Companion.TAG
 import com.gioneco.download.db.DBManager
 import com.gioneco.download.listener.DownloadListener
 import com.gioneco.download.utils.ThreadPoolsUtil
+import com.gioneco.download.utils.logI
 import java.io.File
 import java.io.IOException
 import java.io.RandomAccessFile
@@ -51,10 +50,7 @@ class FileDownloader private constructor() {
         downLoadUrl: String, fileSize: Int,
         filename: String, threadCount: Int, listener: DownloadListener
     ): FileDownloader {
-        Log.i(
-            TAG,
-            "下载参数：context = [${context}], downLoadUrl = [${downLoadUrl}], fileSize = [${fileSize}], filename = [${filename}], threadCount = [${threadCount}], listener = [${listener}]"
-        )
+        "下载参数：context = [${context}], downLoadUrl = [${downLoadUrl}], fileSize = [${fileSize}], filename = [${filename}], threadCount = [${threadCount}], listener = [${listener}]".logI()
         this.context = context
         this.downLoadUrl = downLoadUrl
         this.fileSize = fileSize
@@ -82,7 +78,7 @@ class FileDownloader private constructor() {
                     DBManager.getInstance(context).saveInfo(info)
                 }
             }
-            Log.d(TAG, "数据库中存储的下载记录：" + DBManager.getInstance(context).getInfos(downLoadUrl))
+            "数据库中存储的下载记录：" + DBManager.getInstance(context).getInfos(downLoadUrl).logI()
             accessFile = RandomAccessFile(file, "rw")
             if (accessFile.length() == fileSize.toLong()) {
                 return
@@ -110,7 +106,7 @@ class FileDownloader private constructor() {
     @Synchronized
     fun startDownload() {
         if (downloadStateMap[downLoadUrl] != null && downloadStateMap[downLoadUrl] == Constant.DOWNLOAD_STATE_START) {
-            Log.d(TAG, "开始下载失败:已处于开始下载状态")
+            "开始下载失败:已处于开始下载状态".logI()
             return
         }
         mHandler.post { mListener.onStart(fileSize) }

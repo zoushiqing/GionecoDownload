@@ -1,7 +1,6 @@
 package com.gioneco.download.state.impl
 
 import android.content.Context
-import android.os.Handler
 import com.gioneco.download.constant.Constant
 import com.gioneco.download.download.FileDownloader
 import com.gioneco.download.listener.DownloadListener

@@ -1,14 +1,12 @@
 package com.gioneco.download.state.impl
 
 import android.content.Context
-import android.nfc.Tag
-import android.os.Handler
-import android.util.Log
 import com.gioneco.download.constant.Constant.Companion.TAG
 import com.gioneco.download.download.FileDownloader
 import com.gioneco.download.listener.DownloadListener
 import com.gioneco.download.state.DownloadState
 import com.gioneco.download.utils.ThreadPoolsUtil
+import com.gioneco.download.utils.logI
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -43,7 +41,7 @@ class StartDownloadState : DownloadState {
             connection.connectTimeout = 5000
             connection.readTimeout = 5000
             fileSize = connection.contentLength
-            Log.i(TAG, "后台文件总大小：$fileSize")
+            "后台文件总大小：$fileSize".logI()
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {

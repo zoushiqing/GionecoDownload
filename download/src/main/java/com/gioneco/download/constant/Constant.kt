@@ -19,6 +19,9 @@ class Constant {
         const val DOWNLOAD_STATE_PAUSE = 1
         //下载状态
         const val DOWNLOAD_STATE_START = 2
+
+        //控制打印日志
+        var DEBUG = false
     }
 
 }
